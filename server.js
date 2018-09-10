@@ -1,4 +1,20 @@
 var restify = require('restify');
+const Sequelize = require('sequelize');
+
+const sequelize = new Sequelize('postgres', 'postgres', 'Sugmaseng', {
+    host: 'localhost',
+    dialect: 'postgres',
+  
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    },
+  
+    // http://docs.sequelizejs.com/manual/tutorial/querying.html#operators
+    operatorsAliases: false
+  });
 
 function respond(req, res, next) {
   res.send('hello ' + req.params.name);

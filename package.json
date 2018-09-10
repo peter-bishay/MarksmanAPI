@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/peter-bishay/MarksmanAPI#readme",
   "dependencies": {
-    "restify": "^7.2.1"
+    "pg": "^7.4.3",
+    "pg-hstore": "^2.3.2",
+    "restify": "^7.2.1",
+    "sequelize": "^4.38.0"
   }
 }
