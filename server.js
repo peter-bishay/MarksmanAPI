@@ -23,6 +23,17 @@ function respond(req, res, next) {
 
 var server = restify.createServer();
 server.get('/hello/:name', respond);
+server.post('/login', function(req, res, next){
+
+
+    res.send(200 );
+
+});
+
+server.get('/subjects/:userid', function(req, res, next){
+
+
+})
 server.head('/hello/:name', respond);
 
 server.listen(8080, function() {
