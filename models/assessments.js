@@ -20,24 +20,20 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false
     },
+    total_mark: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    actual_mark: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    goal_mark: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     weight: {
       type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    mark: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    due_date: {
-      type: DataTypes.DATEONLY,
-      allowNull: true
-    },
-    pass_mark: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    note: {
-      type: DataTypes.STRING,
       allowNull: false
     }
   }, {

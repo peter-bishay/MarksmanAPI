@@ -38,9 +38,22 @@ server.use(restify.plugins.acceptParser(server.acceptable));
 
 server.get('/hello/:name', respond);
 server.post('/login', function(req, res, next){
+  const username = req.body.username
+  const password = req.body.password
+  const email    = req.body.email
 
-
+  Users.find({
+    where: {
+      username: username
+    }
+  }).then(user => {
+    if (user.password == password) {
+      res.send(200, user.id);
+    }
     res.send(400);
+
+  });
+
 
 });
 
