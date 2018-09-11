@@ -4,6 +4,9 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize('postgres', 'postgres', 'Sugmaseng', {
     host: 'localhost',
     dialect: 'postgres',
+    define: {
+      timestamps: false
+    },
   
     pool: {
       max: 5,
@@ -15,6 +18,8 @@ const sequelize = new Sequelize('postgres', 'postgres', 'Sugmaseng', {
     // http://docs.sequelizejs.com/manual/tutorial/querying.html#operators
     operatorsAliases: false
   });
+
+const Users = sequelize.import('./models/users');
 
 function respond(req, res, next) {
   res.send('hello ' + req.params.name);
@@ -45,7 +50,15 @@ server.post('/createAccount', function(req, res, next){
   const password = req.body.password
   const email    = req.body.email
 
-  res.send(200, username);
+  Users.create({username: username, password: password, email: email}).then(user => {
+    res.send(200, user.id);
+    return next();
+  }).catch(error => {
+    return res.send(400);
+  })
+
+  //
+  
 
 });
 
