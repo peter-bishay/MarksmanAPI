@@ -11,3 +11,13 @@ CREATE TABLE subjects (
     name varchar(255) NOT NULL,
     goal_mark int NOT NULL
 );
+
+CREATE TABLE assessments (
+	id SERIAL PRIMARY KEY,
+	subject_id int REFERENCES subjects (id),
+	name varchar(255) NOT NULL,
+	total_mark int NOT NULL,
+	actual_mark int NOT NULL,
+	goal_mark int NOT NULL,
+	weight int NOT NULL
+);
