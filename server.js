@@ -21,6 +21,7 @@ const sequelize = new Sequelize('postgres', 'postgres', 'Sugmaseng', {
 
 const Users = sequelize.import('./models/users');
 const Subjects = sequelize.import('./models/subjects');
+const Assessments = sequelize.import('./models/assessments');
 
 var server = restify.createServer();
 
@@ -126,6 +127,81 @@ server.del('/subjects/:id', function(req, res, next){
   const id = req.params.id;
 
   Subjects.destroy({
+    where: {
+      id: id
+    }
+  }).then(() => {
+    res.send(200);
+    return next();
+  }).catch(() => {
+    res.send(200);
+    return next();
+  })
+});
+
+server.get('/assessments/:subject_id', function(req, res, next){
+  const subject_id = req.params.subject_id;
+  Assessments.findAll({
+    where: {
+      subject_id: subject_id
+    }
+  }).then(assessments => {
+    res.send(200, assessments);
+    return next();
+  }).catch(error => {
+    res.send(400, error);
+    return next();
+  });
+});
+
+server.post('/assessments', function(req, res, next){
+  const subject_id = req.body.subject_id;
+  const name = req.body.name;
+  const total_mark = req.body.total_mark;
+  const actual_mark = req.body.actual_mark;
+  const goal_mark = req.body.goal_mark;
+  const weight = req.body.weight;
+
+  Assessments.create({subject_id: subject_id, name: name, total_mark: total_mark, 
+  actual_mark: actual_mark, goal_mark: goal_mark, weight: weight}).then(assessment => {
+    res.send(201, assessment.id);
+    return next();
+  }).catch(error => {
+    res.send(400, error);
+    return next();
+  })
+});
+
+server.put('/assessments', function(req, res, next){
+  const id = req.body.id;
+  //const user_id = req.body.user_id;
+  const name = req.body.name;
+  const goal_mark = req.body.goal_mark;
+  const weight = req.body.weight;
+  const total_mark = req.body.total_mark;
+  const actual_mark = req.body.actual_mark;
+
+  Assessments.update({
+    name: name,
+    goal_mark: goal_mark,
+    weight: weight,
+    total_mark: total_mark,
+    actual_mark: actual_mark
+  },{
+    where: { id: id }
+  }).then(assessment => {
+    res.send(200, assessment);
+    return next();
+  }).catch(error => {
+    res.send(400, error);
+    return next();
+  })
+});
+
+server.del('/assessments/:id', function(req, res, next){
+  const id = req.params.id;
+
+  Assessments.destroy({
     where: {
       id: id
     }
