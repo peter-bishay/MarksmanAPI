@@ -214,6 +214,38 @@ server.del('/assessments/:id', function(req, res, next){
   })
 });
 
+// Calculate total current mark out of the total as a percentage, returns current total and total
+server.get('/subjects/totals/:subject_id', function (req, res, next){
+  const subject_id = req.params.subject_id;
+
+  total = 0; // Should add to 100 when all assessments added
+  curr_total = 0; // Actual total out of 100
+
+  Assessments.findAll({
+    where: {
+      subject_id: subject_id
+    }
+  }).then(assess => {
+      assess.forEach(assessment => {
+        const asses_actual = assessment.actual_mark / assessment.total_mark;
+        // console.log(asses_actual);
+        const asses_total = asses_actual * assessment.weight;
+        // console.log(asses_total);
+        total += assessment.weight;
+        // console.log(total);
+        curr_total += asses_total;
+        // console.log(curr_total);
+      })
+      res.send(200, {total, curr_total})
+  }).catch(error => {
+    res.send(400);
+  });
+
+  
+  return next();
+
+});
+
 server.listen(8080, function() {
   console.log('%s listening at %s', server.name, server.url);
 });
