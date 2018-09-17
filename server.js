@@ -73,9 +73,10 @@ server.post('/login', function(req, res, next){
 
 
 server.post('/createAccount', function(req, res, next){
-  const username = req.body.username
-  const password = req.body.password
-  const email    = req.body.email
+  const json = JSON.parse(req.body);
+  const username = json.username
+  const password = json.password
+  const email    = json.email
 
   Users.create({username: username, password: password, email: email}).then(user => {
     res.send(201, "id:" + " " + user.id);
