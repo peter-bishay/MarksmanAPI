@@ -1,5 +1,6 @@
 var restify = require('restify');
 const Sequelize = require('sequelize');
+const corsMiddleware = require('restify-cors-middleware');
 
 const sequelize = new Sequelize('postgres', 'postgres', 'Sugmaseng', {
     host: 'localhost',
@@ -19,6 +20,12 @@ const sequelize = new Sequelize('postgres', 'postgres', 'Sugmaseng', {
     operatorsAliases: false
   });
 
+const cors = corsMiddleware({
+  origins: ['*'],
+  allowHeaders: ['*'],
+  exposeHeaders: ['*']
+});  
+
 const Users = sequelize.import('./models/users');
 const Subjects = sequelize.import('./models/subjects');
 const Assessments = sequelize.import('./models/assessments');
@@ -33,10 +40,16 @@ server.use(restify.plugins.bodyParser({
 }));
 server.use(restify.plugins.acceptParser(server.acceptable));
 
+server.pre(cors.preflight);
+server.use(cors.actual);
+
+
 server.post('/login', function(req, res, next){
-  const username = req.body.username
-  const password = req.body.password
-  const email    = req.body.email
+  const json = JSON.parse(req.body);
+  const username = json.username;
+  const password = json.password;
+  const email    = json.email;
+
 
   Users.find({
     where: {
@@ -51,7 +64,7 @@ server.post('/login', function(req, res, next){
       return next();
     }
   }).catch(error => {
-    res.send(400);
+    res.send(400, "error");
     return next();
   });
 
@@ -246,6 +259,6 @@ server.get('/subjects/totals/:subject_id', function (req, res, next){
 
 });
 
-server.listen(8080, function() {
+server.listen(8081, function() {
   console.log('%s listening at %s', server.name, server.url);
 });
