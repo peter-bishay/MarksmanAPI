@@ -29,6 +29,7 @@ const cors = corsMiddleware({
 const Users = sequelize.import('./models/users');
 const Subjects = sequelize.import('./models/subjects');
 const Assessments = sequelize.import('./models/assessments');
+//const Tasks = sequelize.import('./models/tasks');
 
 var server = restify.createServer();
 
