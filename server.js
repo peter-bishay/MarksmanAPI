@@ -1,6 +1,7 @@
 var restify = require('restify');
 const Sequelize = require('sequelize');
 const corsMiddleware = require('restify-cors-middleware');
+var moment = require('moment');
 
 const sequelize = new Sequelize('postgres', 'postgres', 'Sugmaseng', {
     host: 'localhost',
@@ -29,7 +30,7 @@ const cors = corsMiddleware({
 const Users = sequelize.import('./models/users');
 const Subjects = sequelize.import('./models/subjects');
 const Assessments = sequelize.import('./models/assessments');
-//const Tasks = sequelize.import('./models/tasks');
+const Tasks = sequelize.import('./models/tasks');
 
 var server = restify.createServer();
 
@@ -46,10 +47,9 @@ server.use(cors.actual);
 
 
 server.post('/login', function(req, res, next){
-  const json = JSON.parse(req.body);
-  const username = json.username;
-  const password = json.password;
-  const email    = json.email;
+  const username = req.body.username;
+  const password = req.body.password;
+  const email    = req.body.email;
 
 
   Users.find({
@@ -74,10 +74,9 @@ server.post('/login', function(req, res, next){
 
 
 server.post('/createAccount', function(req, res, next){
-  const json = JSON.parse(req.body);
-  const username = json.username
-  const password = json.password
-  const email    = json.email
+  const username = req.body.username
+  const password = req.body.password
+  const email    = req.body.email
 
   Users.create({username: username, password: password, email: email}).then(user => {
     res.send(201, "id:" + " " + user.id);
@@ -260,6 +259,68 @@ server.get('/subjects/totals/:subject_id', function (req, res, next){
   return next();
 
 });
+
+server.post('/tasks', function(req, res, next){
+  const user_id = req.body.user_id;
+  const task_description = req.body.task_description;
+  const complete = req.body.complete;
+  const due_date = moment(req.body.due_date, 'DD/MM/YYYY').toString();
+
+  Tasks.create({user_id, task_description, complete, due_date}).then(task => {
+    res.send(201, task.id);
+    return next();
+  }).catch(error => {
+    res.send(400, error);
+    return next();
+  });
+});
+
+server.put('/tasks', function(req, res, next){
+  const id = req.body.id;
+  const task_description = req.body.task_description;
+  const complete = req.body.complete;
+  const due_date = moment(req.body.due_date, 'DD/MM/YYYY').toString();
+
+  Tasks.update({task_description, complete, due_date}, {where: {id}}).then(task => {
+    res.send(200, task.id);
+    return next();
+  }).catch(error => {
+    res.send(400, error);
+    return next();
+  });
+});
+
+server.get('/tasks/:user_id', function(req, res, next){
+  const user_id = req.params.user_id;
+  Tasks.findAll({
+    where: {
+      user_id: user_id
+    }
+  }).then(tasks => {
+    res.send(200, tasks);
+    return next();
+  }).catch(error => {
+    res.send(400, error);
+    return next();
+  });
+});
+
+server.del('/tasks/:id', function(req, res, next){
+  const id = req.params.id;
+
+  Tasks.destroy({
+    where: {
+      id: id
+    }
+  }).then(() => {
+    res.send(200);
+    return next();
+  }).catch(() => {
+    res.send(200);
+    return next();
+  })
+});
+
 
 server.listen(8081, function() {
   console.log('%s listening at %s', server.name, server.url);

@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/peter-bishay/MarksmanAPI#readme",
   "dependencies": {
+    "moment": "^2.22.2",
     "pg": "^7.4.3",
     "pg-hstore": "^2.3.2",
     "restify": "^7.2.1",
