@@ -94,14 +94,45 @@ server.get('/subjects/:user_id', function(req, res, next){
     where: {
       user_id: user_id
     }
-  }).then(subjects => {
-    res.send(200, subjects);
+  }).then(async subjects => {
+    var new_subjects = [];
+    
+    for (var i = 0; i < subjects.length; i++) {
+      let marks =  await getTotals(subjects[i].id);
+      let subject = subjects[i];
+      subject.total =  marks.total;
+      subject.curr_total = marks.curr_total
+      console.log(subject.total)
+      new_subjects.push({id: subject.id, userid: subject.user_id, name: subject.name, goal_mark: subject.goal_mark, total: subject.total, curr_total: subject.curr_total});
+    }
+    
+    await res.send(200, new_subjects);
     return next();
   }).catch(error => {
     res.send(400, error);
     return next();
   });
 });
+
+async function getTotals(id) {
+  
+  var total = 0;
+  var curr_total = 0;
+  let pls = await Assessments.findAll({
+      where: {
+        subject_id: id
+      }
+    }).then(assess => {
+        assess.forEach((assessment) => {
+          const asses_actual = assessment.actual_mark / assessment.total_mark;
+          const asses_total = asses_actual * assessment.weight;
+          total += assessment.weight;
+          curr_total += asses_total;
+        })
+    })
+
+    return {total, curr_total};
+}
 
 server.post('/subjects', function(req, res, next){
   const user_id = req.body.user_id;
