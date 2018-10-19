@@ -94,7 +94,7 @@ server.get('/subjects/:user_id', function(req, res, next){
     where: {
       user_id: user_id
     }
-  }).then(async subjects => {
+  }).then(async (subjects) => {
     var new_subjects = [];
     
     for (var i = 0; i < subjects.length; i++) {
