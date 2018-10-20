@@ -205,10 +205,12 @@ server.post('/assessments', function(req, res, next){
   const total_mark = req.body.total_mark;
   const actual_mark = req.body.actual_mark;
   const goal_mark = req.body.goal_mark;
-  const weight = req.body.weight;
+  const time_required = req.body.time_required;
+  const due_date = req.body.due_date;
+  const memo = req.body.memo;
 
   Assessments.create({subject_id: subject_id, name: name, total_mark: total_mark, 
-  actual_mark: actual_mark, goal_mark: goal_mark, weight: weight}).then(assessment => {
+  actual_mark: actual_mark, goal_mark: goal_mark, weight: weight, time_required, due_date, memo}).then(assessment => {
     res.send(201, assessment.id);
     return next();
   }).catch(error => {
@@ -225,13 +227,20 @@ server.put('/assessments', function(req, res, next){
   const weight = req.body.weight;
   const total_mark = req.body.total_mark;
   const actual_mark = req.body.actual_mark;
+  const time_required = req.body.time_required;
+  const due_date = req.body.due_date;
+  const memo = req.body.memo;
+
 
   Assessments.update({
     name: name,
     goal_mark: goal_mark,
     weight: weight,
     total_mark: total_mark,
-    actual_mark: actual_mark
+    actual_mark: actual_mark,
+    time_required, 
+    due_date, 
+    memo
   },{
     where: { id: id }
   }).then(assessment => {

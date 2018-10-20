@@ -26,7 +26,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     actual_mark: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     goal_mark: {
       type: DataTypes.INTEGER,
@@ -35,6 +35,18 @@ module.exports = function(sequelize, DataTypes) {
     weight: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    time_required: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    due_date: {
+      type: DataTypes.DATEONLY,
+      allowNull: true
+    },
+    memo: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     tableName: 'assessments'

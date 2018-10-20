@@ -17,9 +17,12 @@ CREATE TABLE assessments (
 	subject_id int REFERENCES subjects (id) ON DELETE CASCADE,
 	name varchar(255) NOT NULL,
 	total_mark int NOT NULL,
-	actual_mark int NOT NULL,
+	actual_mark int,
 	goal_mark int NOT NULL,
-	weight int NOT NULL
+	weight int NOT NULL,
+    time_required int,
+    due_date DATE,
+    memo varchar(3000)
 );
 
 CREATE TABLE tasks (
