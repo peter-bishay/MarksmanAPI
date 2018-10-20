@@ -23,10 +23,6 @@ module.exports = function(sequelize, DataTypes) {
     complete: {
       type: DataTypes.BOOLEAN,
       allowNull: false
-    },
-    due_date: {
-      type: DataTypes.DATEONLY,
-      allowNull: false
     }
   }, {
     tableName: 'tasks'

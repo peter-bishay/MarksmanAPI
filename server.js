@@ -197,7 +197,7 @@ server.get('/assessments/:subject_id', function(req, res, next){
     res.send(400, error);
     return next();
   });
-});
+}); 
 
 server.post('/assessments', function(req, res, next){
   const subject_id = req.body.subject_id;
@@ -205,6 +205,7 @@ server.post('/assessments', function(req, res, next){
   const total_mark = req.body.total_mark;
   const actual_mark = req.body.actual_mark;
   const goal_mark = req.body.goal_mark;
+  const weight = req.body.weight;
   const time_required = req.body.time_required;
   const due_date = req.body.due_date;
   const memo = req.body.memo;
@@ -281,14 +282,16 @@ server.get('/subjects/totals/:subject_id', function (req, res, next){
     }
   }).then(assess => {
       assess.forEach(assessment => {
-        const asses_actual = assessment.actual_mark / assessment.total_mark;
-        // console.log(asses_actual);
-        const asses_total = asses_actual * assessment.weight;
-        // console.log(asses_total);
-        total += assessment.weight;
-        // console.log(total);
-        curr_total += asses_total;
-        // console.log(curr_total);
+        if (assessment.actual_mark != null){
+          const asses_actual = assessment.actual_mark / assessment.total_mark;
+          // console.log(asses_actual);
+          const asses_total = asses_actual * assessment.weight;
+          // console.log(asses_total);
+          total += assessment.weight;
+          // console.log(total);
+          curr_total += asses_total;
+          // console.log(curr_total);
+        }
       })
       res.send(200, {total, curr_total})
   }).catch(error => {
@@ -304,9 +307,9 @@ server.post('/tasks', function(req, res, next){
   const user_id = req.body.user_id;
   const task_description = req.body.task_description;
   const complete = req.body.complete;
-  const due_date = moment(req.body.due_date, 'DD/MM/YYYY').toString();
+  // const due_date = moment(req.body.due_date, 'DD/MM/YYYY').toString(); 
 
-  Tasks.create({user_id, task_description, complete, due_date}).then(task => {
+  Tasks.create({user_id, task_description, complete}).then(task => {
     res.send(201, task.id);
     return next();
   }).catch(error => {
@@ -319,9 +322,9 @@ server.put('/tasks', function(req, res, next){
   const id = req.body.id;
   const task_description = req.body.task_description;
   const complete = req.body.complete;
-  const due_date = moment(req.body.due_date, 'DD/MM/YYYY').toString();
+  // const due_date = moment(req.body.due_date, 'DD/MM/YYYY').toString();
 
-  Tasks.update({task_description, complete, due_date}, {where: {id}}).then(task => {
+  Tasks.update({task_description, complete}, {where: {id}}).then(task => {
     res.send(200, task.id);
     return next();
   }).catch(error => {

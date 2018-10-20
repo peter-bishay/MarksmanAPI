@@ -29,6 +29,5 @@ CREATE TABLE tasks (
     id SERIAL PRIMARY KEY,
     user_id int REFERENCES users (id) ON DELETE CASCADE,
     task_description varchar(255) NOT NULL,
-    complete boolean NOT NULL,
-    due_date DATE NOT NULL
+    complete boolean NOT NULL
 );
